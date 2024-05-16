@@ -1,21 +1,29 @@
-import chalk from "chalk";
 import fs from "fs";
-import { resolve } from "path";
+import path, { resolve } from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 function addTask(task) {
   // ajoute à la fin du tableau du fichier tasks.json la tâche reçue en paramètre
+  return new Promise((resolve, reject) => {
+    listAllTaks()
+      .then((tasks) => {
+        tasks.push(task);
 
-  listAllTaks()
-    .then((tasks) => {
-      tasks.push(task);
-
-      fs.writeFile("tasks.json", JSON.stringify(tasks), () => {
-        console.log("opération terminé !");
+        fs.writeFile(
+          path.resolve(__dirname, "./tasks.json"),
+          JSON.stringify(tasks),
+          () => {
+            resolve();
+          }
+        );
+      })
+      .catch((error) => {
+        reject();
       });
-    })
-    .catch((error) => {
-      console.log("une erreur s'est produite");
-    });
+  });
 }
 
 function listAllTaks() {
@@ -24,15 +32,19 @@ function listAllTaks() {
   // afficher toutes les tâches
 
   return new Promise((resolve, reject) => {
-    fs.readFile("tasks.json", "utf-8", (error, data) => {
-      if (error) {
-        console.log("Un erreur a survenu");
-        reject(error);
-      } else {
-        console.log("data: ", data);
-        resolve(JSON.parse(data));
+    fs.readFile(
+      path.resolve(__dirname, "./tasks.json"),
+      "utf-8",
+      (error, data) => {
+        if (error) {
+          console.log("Un erreur a survenu");
+          reject(error);
+        } else {
+          console.log("data: ", data);
+          resolve(JSON.parse(data));
+        }
       }
-    });
+    );
   });
 
   //
