@@ -40,7 +40,6 @@ function listAllTaks() {
           console.log("Un erreur a survenu");
           reject(error);
         } else {
-          console.log("data: ", data);
           resolve(JSON.parse(data));
         }
       }
@@ -54,13 +53,26 @@ function removeTask(taskId) {
   return new Promise(async (resolve, reject) => {
     try {
       const tasks = await listAllTaks();
-      const restTask = tasks.filter((task) => {
+
+      const task = tasks.find((task) => {
+        return task.id === taskId;
+      });
+
+      if (!task) {
+        resolve("not found");
+      }
+
+      const restTasks = tasks.filter((task) => {
         return task.id !== taskId;
       });
-      console.log(restTask.length);
-      fs.writeFile("tasks.json", JSON.stringify(restTask), () => {
-        resolve("sucess");
-      });
+
+      fs.writeFile(
+        path.resolve(__dirname, "./tasks.json"),
+        JSON.stringify(restTasks),
+        () => {
+          resolve("sucess");
+        }
+      );
     } catch {
       reject();
     }
