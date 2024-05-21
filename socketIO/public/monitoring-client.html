@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Monitoring Client</title>
+  <style>
+    #messages {
+      margin-top: 20px;
+    }
+    .message {
+      padding: 10px;
+      margin: 5px 0;
+      border: 1px solid #ddd;
+    }
+  </style>
+</head>
+<body>
+  <h1>Monitoring Client</h1>
+  <div id="messages"></div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const socket = io();
+
+      socket.on('connect', () => {
+        console.log('Connecté au serveur Socket.IO');
+      });
+
+      socket.on('message', (msg) => {
+        console.log('Message du serveur : ' + msg);
+        const messagesDiv = document.getElementById('messages');
+        const messageParagraph = document.createElement('p');
+        messageParagraph.className = 'message';
+        messageParagraph.textContent = msg;
+        messagesDiv.appendChild(messageParagraph);
+      });
+
+      socket.on('disconnect', () => {
+        console.log('Déconnecté du serveur Socket.IO');
+      });
+    });
+  </script>
+</body>
+</html>
