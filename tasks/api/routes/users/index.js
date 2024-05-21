@@ -1,6 +1,7 @@
 import express from "express";
 import { addUser } from "../../services/users/index.js";
 import { hashPassword, generateJwt } from "../../services/shared/index.js";
+import isAuthenticated from "../../../middlewares/isAuthenticated/index.js";
 
 const router = express.Router();
 
@@ -33,5 +34,8 @@ router.post("/", async (req, res) => {
     return res.status(500).json({ message: "An error occurred" });
   }
 });
+
+// j'ai une route qui permet de supprimer un utilisateur
+router.delete("/", isAuthenticated, (req, res) => {});
 
 export default router;

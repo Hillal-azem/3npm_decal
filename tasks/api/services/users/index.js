@@ -1,5 +1,3 @@
-import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
 import User from "../../../models/user/index.js";
 
 function addUser(email, password) {
